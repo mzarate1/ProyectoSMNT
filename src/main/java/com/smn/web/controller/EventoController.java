@@ -1,10 +1,18 @@
 package com.smn.web.controller;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,8 +37,7 @@ public class EventoController {
 	public String listado_evento (Model modelo) {
 		modelo.addAttribute("listado_evento",servicioEvento.listarEvento());
 		return "consultar_evento";
-	}
-			
+	}	
 	
 	@ModelAttribute("allCiudades")
     public List<Ciudad> getAllCiudades() {
@@ -45,9 +52,44 @@ public class EventoController {
 	}
 	
 	@PostMapping("/evento/agregar")
-	public String guardarCiudad(@ModelAttribute("evento") Evento evento) {
-		servicioEvento.guardarEvento(evento);
+	public String guardarEvento(@Valid @ModelAttribute("evento") EventoForm eventoForm, BindingResult result, Model modelo) {
+		//servicioEvento.guardarEvento(evento);
+
+		Calendar today = Calendar.getInstance();
+		today.add(Calendar.DATE, -1);
+
+		Calendar hoy = Calendar.getInstance();
+		hoy.add(Calendar.DATE, 1);
+		
+		Date mañana = hoy.getTime();
+		Date todayDate = today.getTime();
+		
+		//validamos que la fecha no sea mayor a mañana
+		if (eventoForm.getFechaevento().after(mañana) || eventoForm.getFechaevento().before(todayDate)) {
+			FieldError error = new FieldError("evento","fechaevento","**La fecha debe ser del día de la fecha o el siguiente.");
+			result.addError(error);
+		}
+		
+
+	
+		if (result.hasErrors()) 
+		{
+			modelo.addAttribute("evento", eventoForm);
+			System.out.println();
+
+			System.out.println("Hubo errores");
+			return "crear_evento";
+		}
+		
+			Evento evento = eventoForm.toPojos();
+			evento.setId_ciudad(servicioCiudad.obtenerCiudadId(eventoForm.getId_ciudad()));
+			servicioEvento.guardarEvento(evento);
+			System.out.println("Se envía alerta por email a las siguienes casillas:");
+			System.out.println(servicioEvento.emailPersonas(evento.getId_ciudad().getId_ciudad()));
+		
+		
 		return "redirect:/consultar_evento";
+		
 	}
 	
 	@GetMapping("/consultar_evento/editar/{id}")
@@ -72,4 +114,9 @@ public class EventoController {
 		return "redirect:/consultar_evento";
 	}
 	
+	public static LocalDateTime convertToLocalDateTimeViaInstant(Date dateToConvert) {
+	    return dateToConvert.toInstant()
+	      .atZone(ZoneId.systemDefault())
+	      .toLocalDateTime();
+	}
 }

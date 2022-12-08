@@ -23,6 +23,7 @@ public class EventoServiceImpl implements EventoService {
 	@Override
 	public Evento guardarEvento(Evento evento) {
 		return repositorio.save(evento);
+				
 	}
 
 	@Override
@@ -39,5 +40,13 @@ public class EventoServiceImpl implements EventoService {
 	public void eliminarEvento(Evento evento) {
 		repositorio.delete(evento);
 	}
+	
+	// metodo que genera una lista de emails de todas las personas que esten asociadas a una ciudad.
+	@Override
+	public List<String> emailPersonas(Long id_ciudad) {
+		return repositorio.searchByCiudadQueryNative(id_ciudad);
+		 
+	}
+
 
 }

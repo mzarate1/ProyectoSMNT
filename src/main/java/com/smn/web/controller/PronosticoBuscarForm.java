@@ -7,8 +7,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class PronosticoBuscarForm {
 	
 	private Long IdCiudadSeleccionada;
+	
 	@DateTimeFormat(pattern = "yyyy/MM/dd")
 	private Date Fechaactual;
+	
 	@DateTimeFormat(pattern = "yyyy/MM/dd")
 	private Date Fechaextendida;
 	

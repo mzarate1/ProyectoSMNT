@@ -1,5 +1,6 @@
 package com.smn.web.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -35,12 +36,6 @@ public class PronosticoBuscarController {
     public String preparaForm(Model modelo) {
     	PronosticoBuscarForm form =  new PronosticoBuscarForm();
     	form.setIdCiudadSeleccionada(1L);
-    	Date fechaactual = new Date();
-    	Calendar calendar = Calendar.getInstance();
-	 	calendar.setTime(fechaactual); 
-	 	calendar.add(Calendar.DAY_OF_YEAR, 10);
-	 	form.setFechaactual(fechaactual);
-		form.setFechaextendida(calendar.getTime());
     	modelo.addAttribute("formBean",form);
     return "pronosticoBuscar";
     }
@@ -57,8 +52,20 @@ public class PronosticoBuscarController {
     	if(action.equals("Buscar"))
     	{
     		try {
-   			List<Pronostico> pronostico = servicio.filter(formBean);
-           	modelo.addAttribute("resultados",pronostico);
+    			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    			String fechaComoCadena = sdf.format(new Date());
+    			Date fechaactual = new SimpleDateFormat("yyyy-MM-dd").parse(fechaComoCadena);
+    	    	Calendar calendar = Calendar.getInstance();
+    		 	calendar.setTime(fechaactual); 
+    		 	calendar.add(Calendar.DAY_OF_YEAR, 10);
+    		 	var fechaext = calendar.getTime();
+    		 	String fechaCadena = sdf.format(fechaext);
+    		 	Date fechaextendida = new SimpleDateFormat("yyyy-MM-dd").parse(fechaCadena);
+    		 	formBean.setIdCiudadSeleccionada(formBean.getIdCiudadSeleccionada());
+    		 	formBean.setFechaactual(fechaactual);
+    		 	formBean.setFechaextendida(fechaextendida);
+    			List<Pronostico> pronostico = servicio.filter(formBean);
+    			modelo.addAttribute("resultados",pronostico);
 			} catch (Exception e) {
 				ObjectError error = new ObjectError("globalError", e.getMessage());
 	            result.addError(error);

@@ -16,4 +16,6 @@ public interface EventoService {
 	public Evento actualizarEvento(Evento evento);
 	
 	public void eliminarEvento(Evento evento);
+
+	public List<String> emailPersonas(Long id_ciudad);
 }

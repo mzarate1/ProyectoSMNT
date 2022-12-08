@@ -1,6 +1,8 @@
 package com.smn.web.controller;
 
-import java.time.LocalDate;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 //import java.time.LocalDate;
 import java.util.List;
 
@@ -31,10 +33,12 @@ public class PronosticoController {
 	private CiudadServiceImpl servicioCiudad;
 	
 	@GetMapping("/consultar_pronostico")
-	public String listado_pronostico(Model modelo) {
+	public String listado_pronostico(Model modelo) throws ParseException {
 	//modelo.addAttribute("listado_pronostico", servicioPronostico.listarPronosticos());
-		LocalDate date = LocalDate.now();
-		modelo.addAttribute("listado_pronostico", servicioPronostico.listarPronosticosFecha(date));
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String fechaComoCadena = sdf.format(new Date());
+		Date fecha = new SimpleDateFormat("yyyy-MM-dd").parse(fechaComoCadena);
+		modelo.addAttribute("listado_pronostico", servicioPronostico.listarPronosticosFecha(fecha));
 		return "consultar_pronostico";
 	}
 	
@@ -42,6 +46,7 @@ public class PronosticoController {
     public List<Ciudad> getAllCiudades() {
         return this.servicioCiudad.listarCiudades();
     }
+	
 	
 	@GetMapping("/pronostico/nuevo")
 	public String mostrarFomularioPronostico(Model modelo) {

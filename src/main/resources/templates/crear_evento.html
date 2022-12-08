@@ -11,10 +11,10 @@
 
 <script>
     $(document).ready(function(){
-      var date_input=$('input[name="fechaevento"]'); 
+      var date_input=$('input[name="fechevento"]'); 
       var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
       var options={
-        format: 'yyyy/mm/dd',
+        format: 'yyyy/MM/dd',
         container: container,
         todayHighlight: true,
         autoclose: true,
@@ -45,10 +45,13 @@
 				<div class="form-group">
 					<label>Fecha: </label>
 					<br>
-					<input type="text" id="fechaevento" name="fechaevento" autocomplete="off" th:field="*{fechaevento}" placeholder="YYYYY/MM/DD"/>
+					<input type="text" id="fechaevento" name="fechaevento" autocomplete="off" th:field="*{fechaevento}" placeholder="yyyy/MM/dd"/>
+					<td> <p class="form text text-danger" th:if="${#fields.hasErrors('fechaevento')}" th:errorclass="error" th:errors="*{fechaevento}"/> </td>
 					<br>
 					<label>Descripcion de Evento: </label>
-					<input type="text" name="dsc_evento" th:field="*{dsc_evento}" class="form-control" placeholder="Evento extremo" required/>
+					<input type="text" name="dsc_evento" th:field="*{dsc_evento}" class="form-control" placeholder="Evento extremo (500 caracteres máximo)" required="required" maxlength=500/>
+					<td> <p class="form text text-danger" th:if="${#fields.hasErrors('dsc_evento')}" th:errorclass="error" th:errors="*{dsc_evento}"/> </td>
+
 				</div>
 				<div class="form-group">
 					<label>Ciudad: </label>
@@ -61,7 +64,7 @@
 				</div>
 				<br>
                 <div class="box-footer">
-							<button class="btn btn-success">Guardar</button>
+				<button class="btn btn-success">Guardar</button>
 				</div>
 </body>
 </html>

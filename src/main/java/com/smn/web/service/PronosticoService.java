@@ -1,6 +1,7 @@
 package com.smn.web.service;
 
-import java.time.LocalDate;
+import java.util.Date;
+//import java.time.LocalDate;
 //import java.text.SimpleDateFormat;
 //import java.util.Date;
 import java.util.List;
@@ -21,7 +22,7 @@ public interface PronosticoService {
 	
 	public void eliminarPronostico(Pronostico pronostico);
 	
-	public List<Pronostico> listarPronosticosFecha(LocalDate date);
+	public List<Pronostico> listarPronosticosFecha(Date date);
 
 	public List<Pronostico> filter(PronosticoBuscarForm formBean);
 

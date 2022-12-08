@@ -1,10 +1,7 @@
 package com.smn.web.service;
 
-import java.time.LocalDate;
+import java.util.Date;
 //import java.time.LocalDate;
-//import java.util.Date;
-//import java.text.SimpleDateFormat;
-//import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +25,7 @@ public class PronosticoServiceImpl implements PronosticoService {
 	
 	
 	@Override
-	public List<Pronostico> listarPronosticosFecha(LocalDate date) {
+	public List<Pronostico> listarPronosticosFecha(Date date) {
 		return repositorio.findByFecha(date);
 	}
 
